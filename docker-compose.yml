@@ -1,0 +1,17 @@
+services:
+  api:
+    build: .
+    image: lab5-api:1.0
+    container_name: lab5-api
+    ports:
+      - "8080:8080"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      Swagger__Enabled: "true"                 # Swagger у контейнері для перевірки
+      ConnectionStrings__Lab5Database: "Data Source=/data/lab5.db"
+    volumes:
+      - lab5-data:/data                        # постійне сховище для файлу SQLite
+    restart: unless-stopped
+
+volumes:
+  lab5-data:

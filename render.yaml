@@ -1,0 +1,15 @@
+# Необов'язково: Blueprint для Render (New + → Blueprint). Можна створити сервіс і вручну (див. docs/cloud-deploy-render.md).
+services:
+  - type: web
+    name: lab5-itops-api
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /health/live
+    autoDeploy: true
+    envVars:
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
+      - key: Swagger__Enabled
+        value: "true"

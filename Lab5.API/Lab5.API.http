@@ -1,0 +1,53 @@
+@host = https://localhost:7080
+
+### Створити сервер (id з відповіді підставте в @id нижче)
+POST {{host}}/api/servers
+Content-Type: application/json
+
+{ "name": "db-prod-01", "type": "Database", "host": "10.0.0.15", "cpuUsage": 22.5, "memoryUsage": 60 }
+
+###
+@id = 00000000-0000-0000-0000-000000000000
+
+### Список серверів
+GET {{host}}/api/servers
+
+### Сервер за id (перевірка збереження після перезапуску API)
+GET {{host}}/api/servers/{{id}}
+
+### Валідація: порожня назва, CPU 150 -> 400
+POST {{host}}/api/servers
+Content-Type: application/json
+
+{ "name": "", "type": "Web", "host": "", "cpuUsage": 150, "memoryUsage": -5 }
+
+### Некоректний JSON -> 400
+POST {{host}}/api/servers
+Content-Type: application/json
+
+{ "name": "db-prod-01", "type": "Database", 
+
+### Змінити стан
+PATCH {{host}}/api/servers/{{id}}/status
+Content-Type: application/json
+
+{ "status": "Maintenance" }
+
+### Недопустимий стан -> 400
+PATCH {{host}}/api/servers/{{id}}/status
+Content-Type: application/json
+
+{ "status": "Broken" }
+
+### Видалити
+DELETE {{host}}/api/servers/{{id}}
+
+### Health-check
+GET {{host}}/health
+###
+GET {{host}}/health/live
+###
+GET {{host}}/health/ready
+
+### Тест middleware: необроблений виняток -> 500 Problem Details (лише Development)
+GET {{host}}/debug/throw
